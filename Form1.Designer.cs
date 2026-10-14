@@ -35,12 +35,12 @@
             this.label3 = new System.Windows.Forms.Label();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.panel3 = new System.Windows.Forms.Panel();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
+            this.Login = new System.Windows.Forms.Button();
+            this.Create_Acount = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.PasswordBox = new System.Windows.Forms.TextBox();
+            this.UserBox = new System.Windows.Forms.TextBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.label6 = new System.Windows.Forms.Label();
@@ -118,34 +118,36 @@
             this.panel3.AutoSize = true;
             this.panel3.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("panel3.BackgroundImage")));
             this.panel3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.panel3.Controls.Add(this.label5);
-            this.panel3.Controls.Add(this.label4);
+            this.panel3.Controls.Add(this.Login);
+            this.panel3.Controls.Add(this.Create_Acount);
             this.panel3.Controls.Add(this.label1);
             this.panel3.Controls.Add(this.label2);
-            this.panel3.Controls.Add(this.textBox2);
-            this.panel3.Controls.Add(this.textBox1);
+            this.panel3.Controls.Add(this.PasswordBox);
+            this.panel3.Controls.Add(this.UserBox);
             this.panel3.Location = new System.Drawing.Point(12, 12);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(475, 261);
+            this.panel3.Size = new System.Drawing.Size(514, 261);
             this.panel3.TabIndex = 13;
             // 
-            // label5
+            // Login
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(318, 204);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(81, 13);
-            this.label5.TabIndex = 16;
-            this.label5.Text = "Create Account";
+            this.Login.Location = new System.Drawing.Point(247, 215);
+            this.Login.Name = "Login";
+            this.Login.Size = new System.Drawing.Size(75, 23);
+            this.Login.TabIndex = 20;
+            this.Login.Text = "Login";
+            this.Login.UseVisualStyleBackColor = true;
+            this.Login.Click += new System.EventHandler(this.Login_Click);
             // 
-            // label4
+            // Create_Acount
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(265, 204);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(37, 13);
-            this.label4.TabIndex = 15;
-            this.label4.Text = "Log In";
+            this.Create_Acount.Location = new System.Drawing.Point(338, 215);
+            this.Create_Acount.Name = "Create_Acount";
+            this.Create_Acount.Size = new System.Drawing.Size(107, 23);
+            this.Create_Acount.TabIndex = 17;
+            this.Create_Acount.Text = "Create Acount";
+            this.Create_Acount.UseVisualStyleBackColor = true;
+            this.Create_Acount.Click += new System.EventHandler(this.Create_Acount_Click);
             // 
             // label1
             // 
@@ -165,19 +167,19 @@
             this.label2.TabIndex = 14;
             this.label2.Text = "Password:";
             // 
-            // textBox2
+            // PasswordBox
             // 
-            this.textBox2.Location = new System.Drawing.Point(304, 172);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(100, 20);
-            this.textBox2.TabIndex = 14;
+            this.PasswordBox.Location = new System.Drawing.Point(304, 172);
+            this.PasswordBox.Name = "PasswordBox";
+            this.PasswordBox.Size = new System.Drawing.Size(100, 20);
+            this.PasswordBox.TabIndex = 14;
             // 
-            // textBox1
+            // UserBox
             // 
-            this.textBox1.Location = new System.Drawing.Point(304, 144);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(100, 20);
-            this.textBox1.TabIndex = 14;
+            this.UserBox.Location = new System.Drawing.Point(304, 144);
+            this.UserBox.Name = "UserBox";
+            this.UserBox.Size = new System.Drawing.Size(100, 20);
+            this.UserBox.TabIndex = 14;
             // 
             // pictureBox1
             // 
@@ -390,9 +392,6 @@
 
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label8;
-
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
 
         #endregion
@@ -404,10 +403,12 @@
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox PasswordBox;
+        private System.Windows.Forms.TextBox UserBox;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.PictureBox pictureBox2;
+        private System.Windows.Forms.Button Login;
+        private System.Windows.Forms.Button Create_Acount;
     }
 }
 
