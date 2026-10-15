@@ -14,7 +14,7 @@ namespace LaRuletaDeLaSuerte
         // ---- Configuración del servidor ----
         private const string SERVER_IP   = "192.168.56.101"; // IP de tu VM Linux
         private const int    SERVER_PORT = 9090;
-        private const int    BUFFER_SIZE = 4096;
+        private const int    BUFFER_SIZE = 8192;
 
         // ============================================================
         // Petición genérica: envía texto, recibe texto.
@@ -66,7 +66,6 @@ namespace LaRuletaDeLaSuerte
 
         // ============================================================
         // CONSULTA 1: jugadores con los que he jugado (código 3)
-        // Respuesta del servidor: nombre1/nombre2/.../  o VACIO
         // ============================================================
         public string JugadoresConLosQueHeJugado(string nombreUsuario)
         {
@@ -87,7 +86,6 @@ namespace LaRuletaDeLaSuerte
 
         // ============================================================
         // CONSULTA 2: resultados contra uno o varios jugadores (código 4)
-        // El servidor acepta un rival por petición; unimos los resultados.
         // ============================================================
         public string ResultadosConJugadores(string nombreUsuario, string[] rivales)
         {
@@ -133,7 +131,6 @@ namespace LaRuletaDeLaSuerte
 
         // ============================================================
         // CONSULTA 3: partidas en un periodo (código 5)
-        // Formato del servidor: id:fecha:ganador/...
         // ============================================================
         public string PartidasEnPeriodo(string nombreUsuario,
                                         DateTime desde, DateTime hasta)
@@ -164,5 +161,14 @@ namespace LaRuletaDeLaSuerte
             }
             return sb.ToString();
         }
+
+        // ============================================================
+        // CHAT — código 6 (enviar) y código 7 (recibir)
+        // ============================================================
+        public string EnviarMensaje(string usuario, string mensaje)
+            => EnviarPeticion("6/" + usuario + "/" + mensaje);
+
+        public string ObtenerMensajes()
+            => EnviarPeticion("7/x");
     }
 }

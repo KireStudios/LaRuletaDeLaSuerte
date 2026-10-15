@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace LaRuletaDeLaSuerte
@@ -7,32 +8,46 @@ namespace LaRuletaDeLaSuerte
     {
         private readonly ConsultasRuleta _consultas = new ConsultasRuleta();
 
-        // Nombre del jugador que ha iniciado sesión (antes: id fijo).
-        // Se rellena al hacer login correctamente.
+        // Nombre del jugador logueado. Se rellena tras un login correcto.
         private string _jugadorActual = null;
+
+        // Timer para refrescar el chat periódicamente
+        private Timer chatTimer;
 
         public Form1()
         {
             InitializeComponent();
 
-            // --- Login / Registro (nombres tal y como los usa el Designer) ---
-            Login.Click          += Login_Click;
-            Create_Acount.Click  += Create_Acount_Click;
+            // --- Login / Registro (los eventos ya están enganchados en el Designer) ---
 
-            // --- Consultas (solo activas tras login) ---
+            // --- Consultas ---
             txtResultados.ReadOnly = true;
             btnJugadores.Click  += btnJugadores_Click;
             btnResultados.Click += btnResultados_Click;
             btnPeriodo.Click    += btnPeriodo_Click;
 
-            // Desactiva los botones de consulta hasta que haya login
+            // Desactiva consultas hasta que haya login
             btnJugadores.Enabled  = false;
             btnResultados.Enabled = false;
             btnPeriodo.Enabled    = false;
+
+            // --- Chat ---
+            button1.Click += button1_Click;
+
+            chatTimer = new Timer();
+            chatTimer.Interval = 2000;                 // cada 2 segundos
+            chatTimer.Tick += (s, ev) => RefrescarChat();
+            chatTimer.Start();
+
+            // Parar el timer al cerrar el formulario
+            this.FormClosing += (s, ev) =>
+            {
+                if (chatTimer != null) chatTimer.Stop();
+            };
         }
 
         // ============================================================
-        // LOGIN  -> petición 2/usuario/password
+        // LOGIN  -> 2/usuario/password
         // ============================================================
         private void Login_Click(object sender, EventArgs e)
         {
@@ -55,7 +70,6 @@ namespace LaRuletaDeLaSuerte
                                 "Login correcto",
                                 MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                // Activa las consultas
                 btnJugadores.Enabled  = true;
                 btnResultados.Enabled = true;
                 btnPeriodo.Enabled    = true;
@@ -75,7 +89,7 @@ namespace LaRuletaDeLaSuerte
         }
 
         // ============================================================
-        // REGISTRO -> petición 1/usuario/password
+        // REGISTRO  -> 1/usuario/password
         // ============================================================
         private void Create_Acount_Click(object sender, EventArgs e)
         {
@@ -144,7 +158,7 @@ namespace LaRuletaDeLaSuerte
             string[] nombres = txtJugadores.Text.Split(
                 new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
 
-            var limpios = new System.Collections.Generic.List<string>();
+            var limpios = new List<string>();
             foreach (string n in nombres)
                 if (n.Trim() != "") limpios.Add(n.Trim());
 
@@ -178,6 +192,59 @@ namespace LaRuletaDeLaSuerte
 
             txtResultados.Text = _consultas.PartidasEnPeriodo(
                 _jugadorActual, dtpDesde.Value.Date, dtpHasta.Value.Date);
+        }
+
+        // ============================================================
+        // CHAT — enviar mensaje
+        // ============================================================
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (_jugadorActual == null)
+            {
+                MessageBox.Show("Inicia sesión antes de chatear.",
+                                "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            string texto = textBox3.Text.Trim();
+            if (texto == "") return;
+
+            if (texto.Contains("/"))
+            {
+                MessageBox.Show("El mensaje no puede contener '/'.",
+                                "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            _consultas.EnviarMensaje(_jugadorActual, texto);
+            textBox3.Clear();
+            textBox3.Focus();
+            RefrescarChat();     // refresco inmediato tras enviar
+        }
+
+        // ============================================================
+        // CHAT — pedir todos los mensajes y pintarlos
+        // ============================================================
+        private void RefrescarChat()
+        {
+            string resp = _consultas.ObtenerMensajes();
+
+            if (resp == "SOCKET_ERROR" || resp == "ERROR" || resp == "VACIO")
+                return;   // nada que mostrar o error momentáneo
+
+            string[] lineas = resp.Split(new[] { '/' },
+                                         StringSplitOptions.RemoveEmptyEntries);
+
+            // "usuario:mensaje" → "usuario: mensaje"
+            string nuevo = string.Join(Environment.NewLine,
+                System.Array.ConvertAll(lineas, l => l.Replace(":", ": ")));
+
+            if (richTextBox1.Text != nuevo + Environment.NewLine)
+            {
+                richTextBox1.Text = nuevo + Environment.NewLine;
+                richTextBox1.SelectionStart = richTextBox1.Text.Length;
+                richTextBox1.ScrollToCaret();
+            }
         }
     }
 }

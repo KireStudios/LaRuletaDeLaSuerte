@@ -232,37 +232,34 @@
             // 
             this.label6.AutoSize = true;
             this.label6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
-            this.label6.Location = new System.Drawing.Point(1631, 262);
+            this.label6.Location = new System.Drawing.Point(1640, 255);
             this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(115, 20);
             this.label6.TabIndex = 17;
             this.label6.Text = "Resolver Panel";
-            this.label6.Visible = false;
             // 
             // label7
             // 
             this.label7.AutoSize = true;
             this.label7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
-            this.label7.Location = new System.Drawing.Point(1655, 314);
+            this.label7.Location = new System.Drawing.Point(1664, 307);
             this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(91, 20);
             this.label7.TabIndex = 18;
             this.label7.Text = "Tirar Ruleta";
-            this.label7.Visible = false;
             // 
             // label8
             // 
             this.label8.AutoSize = true;
             this.label8.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
-            this.label8.Location = new System.Drawing.Point(1635, 367);
+            this.label8.Location = new System.Drawing.Point(1644, 360);
             this.label8.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(111, 20);
             this.label8.TabIndex = 19;
             this.label8.Text = "Comprar Letra";
-            this.label8.Visible = false;
             // 
             // panel2
             // 
@@ -529,10 +526,10 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1778, 1108);
             this.Controls.Add(this.label8);
-            this.Controls.Add(this.panelConsultas);
             this.Controls.Add(this.label7);
-            this.Controls.Add(this.panel4);
             this.Controls.Add(this.label6);
+            this.Controls.Add(this.panelConsultas);
+            this.Controls.Add(this.panel4);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.pictureBox2);
             this.Controls.Add(this.pictureBox1);
