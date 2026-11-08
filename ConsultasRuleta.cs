@@ -5,170 +5,143 @@ using System.Text;
 
 namespace LaRuletaDeLaSuerte
 {
-    /// <summary>
-    /// Cliente TCP que envía peticiones al servidor y devuelve la respuesta.
-    /// Todas las consultas viajan al servidor mediante sockets.
-    /// </summary>
     public class ConsultasRuleta
     {
-        // ---- Configuración del servidor ----
-        private const string SERVER_IP   = "192.168.56.101"; // IP de tu VM Linux
+        private const string SERVER_IP   = "192.168.56.101";
         private const int    SERVER_PORT = 9090;
-        private const int    BUFFER_SIZE = 8192;
 
-        // ============================================================
-        // Petición genérica: envía texto, recibe texto.
-        // Único punto de comunicación con el servidor.
-        // ============================================================
-        private string EnviarPeticion(string peticion)
+        private Socket _socket;
+        private readonly object _lockEnvio = new object();
+        private readonly byte[] _buf = new byte[8192];
+        private readonly StringBuilder _pendiente = new StringBuilder();
+        private readonly Decoder _decoder = Encoding.UTF8.GetDecoder();
+
+        public bool Conectado { get { return _socket != null; } }
+
+        public bool Conectar()
+        {
+            if (Conectado) return true;
+            try
+            {
+                var s = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                s.Connect(new IPEndPoint(IPAddress.Parse(SERVER_IP), SERVER_PORT));
+                _pendiente.Clear();
+                _socket = s;
+                return true;
+            }
+            catch (SocketException) { return false; }
+        }
+
+        public bool Enviar(string peticion)
         {
             try
             {
-                IPAddress direc = IPAddress.Parse(SERVER_IP);
-                IPEndPoint ipep = new IPEndPoint(direc, SERVER_PORT);
-
-                using (Socket server = new Socket(AddressFamily.InterNetwork,
-                                                  SocketType.Stream,
-                                                  ProtocolType.Tcp))
+                lock (_lockEnvio)
                 {
-                    server.Connect(ipep);
-                    server.Send(Encoding.ASCII.GetBytes(peticion));
-
-                    // La respuesta puede llegar en varios paquetes:
-                    // leemos hasta que el servidor cierre la conexión.
-                    var sb = new StringBuilder();
-                    byte[] msg = new byte[BUFFER_SIZE];
-                    int recibidos;
-                    while ((recibidos = server.Receive(msg)) > 0)
-                        sb.Append(Encoding.ASCII.GetString(msg, 0, recibidos));
-
-                    return sb.ToString().Split('\0')[0].Trim();
+                    _socket.Send(Encoding.UTF8.GetBytes(peticion + "\n"));
                 }
+                return true;
             }
-            catch (SocketException)
-            {
-                return "SOCKET_ERROR";
-            }
-            catch (Exception ex)
-            {
-                return "ERROR: " + ex.Message;
-            }
+            catch { return false; }
         }
 
-        // ============================================================
-        // LOGIN / REGISTRO (códigos 1 y 2)
-        // ============================================================
-        public string Login(string usuario, string password)
-            => EnviarPeticion("2/" + usuario + "/" + password);
-
-        public string Registro(string usuario, string password)
-            => EnviarPeticion("1/" + usuario + "/" + password);
-
-        // ============================================================
-        // CONSULTA 1: jugadores con los que he jugado (código 3)
-        // ============================================================
-        public string JugadoresConLosQueHeJugado(string nombreUsuario)
+        /// Bloqueante. Devuelve una línea completa del servidor, o null si se cerró la conexión.
+        /// Solo la llama el hilo de lectura.
+        public string LeerMensaje()
         {
-            string resp = EnviarPeticion("3/" + nombreUsuario);
+            try
+            {
+                while (true)
+                {
+                    string acum = _pendiente.ToString();
+                    int idx = acum.IndexOf('\n');
+                    if (idx >= 0)
+                    {
+                        _pendiente.Remove(0, idx + 1);
+                        return acum.Substring(0, idx).TrimEnd('\r');
+                    }
+                    int n = _socket.Receive(_buf);
+                    if (n <= 0) return null;
+                    char[] chars = new char[n];
+                    int c = _decoder.GetChars(_buf, 0, n, chars, 0);
+                    _pendiente.Append(chars, 0, c);
+                }
+            }
+            catch { return null; }
+        }
 
-            if (resp == "SOCKET_ERROR") return "No se pudo conectar con el servidor.";
-            if (resp == "ERROR")         return "Error al consultar la base de datos.";
-            if (resp == "VACIO")         return "Todavía no has jugado con otros jugadores.";
+        public void Desconectar()
+        {
+            Socket s = _socket;
+            _socket = null;
+            if (s == null) return;
+            try { s.Send(Encoding.UTF8.GetBytes("0/\n")); } catch { }
+            try { s.Shutdown(SocketShutdown.Both); } catch { }   // desbloquea Receive del hilo
+            try { s.Close(); } catch { }
+        }
 
-            string[] nombres = resp.Split(new[] { '/' },
-                                          StringSplitOptions.RemoveEmptyEntries);
-            if (nombres.Length == 0)
-                return "Todavía no has jugado con otros jugadores.";
+        // ---------------- Peticiones (solo envían; la respuesta llega por el hilo) ----------------
+        public bool Login(string u, string p)    { return Enviar("2/" + u + "/" + p); }
+        public bool Registro(string u, string p) { return Enviar("1/" + u + "/" + p); }
+        public bool PedirJugadores()             { return Enviar("3/"); }
+        public bool PedirResultados(string rival){ return Enviar("4/" + rival); }
+        public bool PedirPeriodo(DateTime d, DateTime h)
+        {
+            return Enviar("5/" + d.ToString("yyyy-MM-dd") + "/" + h.ToString("yyyy-MM-dd"));
+        }
+        public bool EnviarMensaje(string texto)  { return Enviar("6/" + texto); }
+        public bool PedirHistorial()             { return Enviar("7/"); }
+        public bool Unirse()          { return Enviar("8/"); }
+        public bool IniciarPartida()  { return Enviar("14/"); }
+        public bool SalirMesa()       { return Enviar("15/"); }
+        public bool Girar()           { return Enviar("18/"); }
 
+        // ---------------- Formateo de respuestas ----------------
+        public static string FormatearJugadores(string resp)
+        {
+            if (resp == "ERROR") return "Error al consultar la base de datos.";
+            if (resp == "VACIO") return "Todavía no has jugado con otros jugadores.";
+            string[] nombres = resp.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
             return "Has jugado con:" + Environment.NewLine +
                    "  - " + string.Join(Environment.NewLine + "  - ", nombres);
         }
 
-        // ============================================================
-        // CONSULTA 2: resultados contra uno o varios jugadores (código 4)
-        // ============================================================
-        public string ResultadosConJugadores(string nombreUsuario, string[] rivales)
+        /// payload = "rival|datos"
+        public static string FormatearResultados(string payload)
         {
-            var sb = new StringBuilder();
+            int i = payload.IndexOf('|');
+            string rival = i >= 0 ? payload.Substring(0, i) : "?";
+            string resp  = i >= 0 ? payload.Substring(i + 1) : payload;
 
-            foreach (string rival in rivales)
-            {
-                string resp = EnviarPeticion("4/" + nombreUsuario + "/" + rival);
-
-                if (resp == "SOCKET_ERROR")
-                {
-                    sb.AppendLine("No se pudo conectar con el servidor.");
-                    continue;
-                }
-                if (resp == "ERROR")
-                {
-                    sb.AppendLine("Error al consultar partidas con " + rival + ".");
-                    continue;
-                }
-                if (resp == "VACIO")
-                {
-                    sb.AppendLine("No hay partidas con " + rival + ".");
-                    continue;
-                }
-
-                sb.AppendLine("Partidas con " + rival + ":");
-
-                // Formato de cada partida: id:fecha:ganador:puntosUsuario/
-                string[] partidas = resp.Split(new[] { '/' },
-                                               StringSplitOptions.RemoveEmptyEntries);
-                foreach (string p in partidas)
-                {
-                    string[] campos = p.Split(':');
-                    if (campos.Length < 4) continue;
-                    sb.AppendLine("   Partida " + campos[0] +
-                                  " (" + campos[1] + ")  ganador: " + campos[2] +
-                                  "  mis puntos: " + campos[3]);
-                }
-                sb.AppendLine();
-            }
-            return sb.ToString().TrimEnd();
-        }
-
-        // ============================================================
-        // CONSULTA 3: partidas en un periodo (código 5)
-        // ============================================================
-        public string PartidasEnPeriodo(string nombreUsuario,
-                                        DateTime desde, DateTime hasta)
-        {
-            string peticion = "5/" + desde.ToString("yyyy-MM-dd") +
-                              "/" + hasta.ToString("yyyy-MM-dd");
-
-            string resp = EnviarPeticion(peticion);
-
-            if (resp == "SOCKET_ERROR") return "No se pudo conectar con el servidor.";
-            if (resp == "ERROR")         return "Error al consultar la base de datos.";
-            if (resp == "VACIO")         return "No hay partidas en ese periodo.";
-
-            string[] partidas = resp.Split(new[] { '/' },
-                                           StringSplitOptions.RemoveEmptyEntries);
+            if (resp == "ERROR") return "Error al consultar partidas con " + rival + ".";
+            if (resp == "VACIO") return "No hay partidas con " + rival + ".";
 
             var sb = new StringBuilder();
-            sb.AppendLine("Partidas entre " +
-                          desde.ToString("dd/MM/yyyy") + " y " +
-                          hasta.ToString("dd/MM/yyyy") + ":");
-            sb.AppendLine();
-            foreach (string p in partidas)
+            sb.AppendLine("Partidas con " + rival + ":");
+            foreach (string p in resp.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries))
             {
-                string[] campos = p.Split(':');
-                if (campos.Length < 3) continue;
-                sb.AppendLine("   Partida " + campos[0] +
-                              " (" + campos[1] + ")  ganador: " + campos[2]);
+                string[] c = p.Split(':');
+                if (c.Length < 4) continue;
+                sb.AppendLine("   Partida " + c[0] + " (" + c[1] + ")  ganador: " + c[2] +
+                              "  mis puntos: " + c[3]);
             }
             return sb.ToString();
         }
 
-        // ============================================================
-        // CHAT — código 6 (enviar) y código 7 (recibir)
-        // ============================================================
-        public string EnviarMensaje(string usuario, string mensaje)
-            => EnviarPeticion("6/" + usuario + "/" + mensaje);
-
-        public string ObtenerMensajes()
-            => EnviarPeticion("7/x");
+        public static string FormatearPeriodo(string resp)
+        {
+            if (resp == "ERROR") return "Error al consultar la base de datos.";
+            if (resp == "VACIO") return "No hay partidas en ese periodo.";
+            var sb = new StringBuilder();
+            sb.AppendLine("Partidas en el periodo:");
+            sb.AppendLine();
+            foreach (string p in resp.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries))
+            {
+                string[] c = p.Split(':');
+                if (c.Length < 3) continue;
+                sb.AppendLine("   Partida " + c[0] + " (" + c[1] + ")  ganador: " + c[2]);
+            }
+            return sb.ToString();
+        }
     }
 }

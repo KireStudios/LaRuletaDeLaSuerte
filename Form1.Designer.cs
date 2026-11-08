@@ -42,20 +42,10 @@
             this.UserBox = new System.Windows.Forms.TextBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.button2 = new System.Windows.Forms.Button();
+            this.lstConectados = new System.Windows.Forms.ListBox();
+            this.btnJugar = new System.Windows.Forms.Button();
             this.label9 = new System.Windows.Forms.Label();
-            this.richTextBox2 = new System.Windows.Forms.RichTextBox();
-            this.panel4 = new System.Windows.Forms.Panel();
-            this.label12 = new System.Windows.Forms.Label();
-            this.richTextBox5 = new System.Windows.Forms.RichTextBox();
-            this.label11 = new System.Windows.Forms.Label();
-            this.richTextBox4 = new System.Windows.Forms.RichTextBox();
-            this.label10 = new System.Windows.Forms.Label();
-            this.richTextBox3 = new System.Windows.Forms.RichTextBox();
             this.panelConsultas = new System.Windows.Forms.Panel();
             this.lblConsultasTitle = new System.Windows.Forms.Label();
             this.btnJugadores = new System.Windows.Forms.Button();
@@ -73,7 +63,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.panel2.SuspendLayout();
-            this.panel4.SuspendLayout();
             this.panelConsultas.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -208,10 +197,10 @@
             // pictureBox1
             // 
             this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(1053, 243);
+            this.pictureBox1.Location = new System.Drawing.Point(768, 243);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(706, 462);
+            this.pictureBox1.Size = new System.Drawing.Size(990, 462);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 15;
             this.pictureBox1.TabStop = false;
@@ -228,59 +217,36 @@
             this.pictureBox2.TabIndex = 16;
             this.pictureBox2.TabStop = false;
             // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
-            this.label6.Location = new System.Drawing.Point(1640, 255);
-            this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(115, 20);
-            this.label6.TabIndex = 17;
-            this.label6.Text = "Resolver Panel";
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
-            this.label7.Location = new System.Drawing.Point(1664, 307);
-            this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(91, 20);
-            this.label7.TabIndex = 18;
-            this.label7.Text = "Tirar Ruleta";
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
-            this.label8.Location = new System.Drawing.Point(1644, 360);
-            this.label8.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(111, 20);
-            this.label8.TabIndex = 19;
-            this.label8.Text = "Comprar Letra";
-            // 
             // panel2
             // 
-            this.panel2.Controls.Add(this.button2);
+            this.panel2.Controls.Add(this.lstConectados);
+            this.panel2.Controls.Add(this.btnJugar);
             this.panel2.Controls.Add(this.label9);
-            this.panel2.Controls.Add(this.richTextBox2);
             this.panel2.Location = new System.Drawing.Point(483, 243);
             this.panel2.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(270, 462);
             this.panel2.TabIndex = 14;
             // 
-            // button2
+            // lstConectados
             // 
-            this.button2.Location = new System.Drawing.Point(75, 408);
-            this.button2.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(112, 35);
-            this.button2.TabIndex = 13;
-            this.button2.Text = "Invite";
-            this.button2.UseVisualStyleBackColor = true;
+            this.lstConectados.FormattingEnabled = true;
+            this.lstConectados.ItemHeight = 20;
+            this.lstConectados.Location = new System.Drawing.Point(28, 64);
+            this.lstConectados.Name = "lstConectados";
+            this.lstConectados.Size = new System.Drawing.Size(226, 324);
+            this.lstConectados.TabIndex = 14;
+            this.lstConectados.Tag = "";
+            // 
+            // btnJugar
+            // 
+            this.btnJugar.Location = new System.Drawing.Point(75, 408);
+            this.btnJugar.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.btnJugar.Name = "btnJugar";
+            this.btnJugar.Size = new System.Drawing.Size(112, 35);
+            this.btnJugar.TabIndex = 13;
+            this.btnJugar.Text = "Jugar";
+            this.btnJugar.UseVisualStyleBackColor = true;
             // 
             // label9
             // 
@@ -292,101 +258,6 @@
             this.label9.Size = new System.Drawing.Size(84, 29);
             this.label9.TabIndex = 11;
             this.label9.Text = "Online";
-            // 
-            // richTextBox2
-            // 
-            this.richTextBox2.BackColor = System.Drawing.Color.White;
-            this.richTextBox2.Location = new System.Drawing.Point(22, 54);
-            this.richTextBox2.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.richTextBox2.Name = "richTextBox2";
-            this.richTextBox2.ReadOnly = true;
-            this.richTextBox2.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-            this.richTextBox2.Size = new System.Drawing.Size(223, 336);
-            this.richTextBox2.TabIndex = 8;
-            this.richTextBox2.Text = "";
-            // 
-            // panel4
-            // 
-            this.panel4.Controls.Add(this.label12);
-            this.panel4.Controls.Add(this.richTextBox5);
-            this.panel4.Controls.Add(this.label11);
-            this.panel4.Controls.Add(this.richTextBox4);
-            this.panel4.Controls.Add(this.label10);
-            this.panel4.Controls.Add(this.richTextBox3);
-            this.panel4.Location = new System.Drawing.Point(768, 243);
-            this.panel4.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(270, 462);
-            this.panel4.TabIndex = 15;
-            // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            this.label12.Location = new System.Drawing.Point(105, 311);
-            this.label12.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(42, 29);
-            this.label12.TabIndex = 17;
-            this.label12.Text = "P3";
-            // 
-            // richTextBox5
-            // 
-            this.richTextBox5.BackColor = System.Drawing.Color.White;
-            this.richTextBox5.Location = new System.Drawing.Point(22, 352);
-            this.richTextBox5.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.richTextBox5.Name = "richTextBox5";
-            this.richTextBox5.ReadOnly = true;
-            this.richTextBox5.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-            this.richTextBox5.Size = new System.Drawing.Size(223, 90);
-            this.richTextBox5.TabIndex = 16;
-            this.richTextBox5.Text = "";
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            this.label11.Location = new System.Drawing.Point(105, 162);
-            this.label11.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(42, 29);
-            this.label11.TabIndex = 15;
-            this.label11.Text = "P2";
-            // 
-            // richTextBox4
-            // 
-            this.richTextBox4.BackColor = System.Drawing.Color.White;
-            this.richTextBox4.Location = new System.Drawing.Point(22, 203);
-            this.richTextBox4.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.richTextBox4.Name = "richTextBox4";
-            this.richTextBox4.ReadOnly = true;
-            this.richTextBox4.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-            this.richTextBox4.Size = new System.Drawing.Size(223, 90);
-            this.richTextBox4.TabIndex = 14;
-            this.richTextBox4.Text = "";
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            this.label10.Location = new System.Drawing.Point(105, 12);
-            this.label10.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(42, 29);
-            this.label10.TabIndex = 11;
-            this.label10.Text = "P1";
-            // 
-            // richTextBox3
-            // 
-            this.richTextBox3.BackColor = System.Drawing.Color.White;
-            this.richTextBox3.Location = new System.Drawing.Point(22, 54);
-            this.richTextBox3.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.richTextBox3.Name = "richTextBox3";
-            this.richTextBox3.ReadOnly = true;
-            this.richTextBox3.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-            this.richTextBox3.Size = new System.Drawing.Size(223, 90);
-            this.richTextBox3.TabIndex = 8;
-            this.richTextBox3.Text = "";
             // 
             // panelConsultas
             // 
@@ -525,11 +396,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1778, 1108);
-            this.Controls.Add(this.label8);
-            this.Controls.Add(this.label7);
-            this.Controls.Add(this.label6);
             this.Controls.Add(this.panelConsultas);
-            this.Controls.Add(this.panel4);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.pictureBox2);
             this.Controls.Add(this.pictureBox1);
@@ -546,8 +413,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
-            this.panel4.ResumeLayout(false);
-            this.panel4.PerformLayout();
             this.panelConsultas.ResumeLayout(false);
             this.panelConsultas.PerformLayout();
             this.ResumeLayout(false);
@@ -556,39 +421,31 @@
 
         #endregion
 
-        // --- Controles existentes ---
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.TextBox textBox3;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.RichTextBox richTextBox1;
+        // --- Login / registro ---
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox PasswordBox;
         private System.Windows.Forms.TextBox UserBox;
-        private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.Button Login;
         private System.Windows.Forms.Button Create_Acount;
+        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.PictureBox pictureBox2;
 
+        // --- Chat ---
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.TextBox textBox3;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.RichTextBox richTextBox1;
+
+        // --- Conectados + botón Jugar ---
         private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.ListBox lstConectados;
+        private System.Windows.Forms.Button btnJugar;
         private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.RichTextBox richTextBox2;
-        private System.Windows.Forms.Panel panel4;
-        private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.RichTextBox richTextBox3;
-        private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.RichTextBox richTextBox4;
-        private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.RichTextBox richTextBox5;
 
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Label label8;
-
-        // --- NUEVOS controles de consultas ---
+        // --- Consultas ---
         private System.Windows.Forms.Panel panelConsultas;
         private System.Windows.Forms.Label          lblConsultasTitle;
         private System.Windows.Forms.Button         btnJugadores;
